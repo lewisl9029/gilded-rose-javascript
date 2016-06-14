@@ -18,6 +18,7 @@ items.push(new Item('Conjured Mana Cake', 3, 6));
 const QUALITY_CHANGE_RATE = -1;
 const SELL_IN_CHANGE_RATE = -1;
 
+// assuming quality increases are also doubled when sell_in is negative
 const getNewQuality = (quality, sellIn, qualityChangeRate = QUALITY_CHANGE_RATE) => {
   const newQuality = sellIn < 0 ? 
     quality + qualityChangeRate * 2 : 
