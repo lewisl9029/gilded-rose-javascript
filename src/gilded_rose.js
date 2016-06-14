@@ -15,10 +15,10 @@ items.push(new Item('Sulfuras, Hand of Ragnaros', 0, 80));
 items.push(new Item('Backstage passes to a TAFKAL80ETC concert', 15, 20));
 items.push(new Item('Conjured Mana Cake', 3, 6));
 
-const qualityChangeRate = 1;
-const sellInChangeRate = 1;
+const QUALITY_CHANGE_RATE = 1;
+const SELL_IN_CHANGE_RATE = 1;
 
-const getNewQuality = (quality, sellIn) => {
+const getNewQuality = (quality, sellIn, qualityChangeRate = QUALITY_CHANGE_RATE) => {
   const newQuality = sellIn < 0 ? 
     quality - qualityChangeRate * 2 : 
     quality - qualityChangeRate;
@@ -28,7 +28,7 @@ const getNewQuality = (quality, sellIn) => {
 // assuming Aged Brie only increases quality at regular rate
 //  regardless of age, even when age is negative
 const getNewAgedBrieQuality = quality => {
-  const newQuality = quality + qualityChangeRate;
+  const newQuality = quality + QUALITY_CHANGE_RATE;
   return newQuality > 50 ? 50 : newQuality;
 };
 
@@ -38,12 +38,12 @@ const getNewBackstagePassQuality = (quality, sellIn) => {
   const newQuality = sellIn < 0 ? 0 :
     sellIn <= 5 ? quality + 3 :
     sellIn <= 10 ? quality + 2 :
-    quality + qualityChangeRate;
+    quality + QUALITY_CHANGE_RATE;
 
   return newQuality > 50 ? 50 : newQuality;
 };
 
-const getNewSellIn = sellIn => sellIn - sellInChangeRate;
+const getNewSellIn = sellIn => sellIn - SELL_IN_CHANGE_RATE;
 
 const updateQuality = item => {
   // assuming items of the same type like backstage passes and conjured items
@@ -55,7 +55,15 @@ const updateQuality = item => {
     });
   }
 
+  if (item.name.startsWith('Conjured')) {
+    return Object.assign({}, item, {
+      sell_in: getNewSellIn(item.sell_in),
+      quality: getNewQuality(item.quality, item.sell_in, QUALITY_CHANGE_RATE * 2)
+    });
+  }
+
   switch (item.name) {
+    // assuming these following special items are one-of-a-kind, with unique names
     case 'Aged Brie':
       return Object.assign({}, item, {
         sell_in: getNewSellIn(item.sell_in),
