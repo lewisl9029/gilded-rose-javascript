@@ -38,13 +38,15 @@ const updateQuality = item => {
   switch (item.name) {
     case 'Aged Brie':
       return Object.assign({}, item, {
-        quality: getNewAgedBrieQuality(item.quality),
-        sell_in: getNewSellIn(item.sell_in)
+        sell_in: getNewSellIn(item.sell_in),
+        quality: getNewAgedBrieQuality(item.quality)
       });
+    case 'Sulfuras, Hand of Ragnaros':
+      return item;
     default:
       return Object.assign({}, item, {
-        quality: getNewQuality(item.quality, item.sell_in),
-        sell_in: getNewSellIn(item.sell_in)
+        sell_in: getNewSellIn(item.sell_in),
+        quality: getNewQuality(item.quality, item.sell_in)
       });
   }
 };
